@@ -1,19 +1,36 @@
 {
-  "id": "/caminhada-pwa/",
+  "id": "/caminhada-pwa/levabota-app-v2",
   "name": "LevaBota",
   "short_name": "LevaBota",
   "description": "Prepara a tua caminhada: percurso, meteorologia e o essencial para levar.",
-  "start_url": "/caminhada-pwa/",
+  "start_url": "/caminhada-pwa/?app=levabota-v2",
   "scope": "/caminhada-pwa/",
   "display": "standalone",
-  "display_override": ["standalone"],
+  "display_override": [
+    "standalone"
+  ],
   "orientation": "portrait-primary",
   "background_color": "#F7F1E7",
   "theme_color": "#B5522B",
   "prefer_related_applications": false,
   "icons": [
-    {"src":"icon-192.png","sizes":"192x192","type":"image/png","purpose":"any"},
-    {"src":"icon-512.png","sizes":"512x512","type":"image/png","purpose":"any"},
-    {"src":"icon-maskable-512.png","sizes":"512x512","type":"image/png","purpose":"maskable"}
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
   ]
 }
