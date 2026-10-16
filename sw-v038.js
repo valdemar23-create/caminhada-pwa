@@ -1,4 +1,4 @@
-const C='levabota-v038';
+const C='levabota-v038-ui310';
 const A=['./','./index.html','./manifest-v038.webmanifest','./icon.svg','./icon-192.png','./icon-512.png','./icon-maskable-512.png','./levabota-brand.png','./splash-levabota.png'];
 self.addEventListener('install',e=>{self.skipWaiting();e.waitUntil(caches.open(C).then(c=>c.addAll(A)))});
 self.addEventListener('activate',e=>e.waitUntil(Promise.all([caches.keys().then(ks=>Promise.all(ks.filter(k=>k!==C).map(k=>caches.delete(k)))),self.clients.claim()])));
