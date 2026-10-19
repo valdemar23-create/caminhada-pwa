@@ -1,5 +1,5 @@
-const BUILD='0321';
-const C='levabota-v038-ui321';
+const BUILD='0322';
+const C='levabota-v038-ui322';
 const CORE=['./manifest-v038.webmanifest','./icon.svg','./icon-192.png','./icon-512.png','./icon-maskable-512.png','./levabota-brand.png','./splash-levabota.png'];
 self.addEventListener('install',e=>{self.skipWaiting();e.waitUntil(caches.open(C).then(c=>Promise.all(CORE.map(async x=>{try{const u=new URL(x,self.location.href);u.searchParams.set('_v',BUILD);const r=await fetch(u,{cache:'reload'});if(r.ok)await c.put(x,r)}catch(_){}}))))});
 self.addEventListener('activate',e=>e.waitUntil((async()=>{const ks=await caches.keys();await Promise.all(ks.filter(k=>k.startsWith('levabota-')&&k!==C).map(k=>caches.delete(k)));await self.clients.claim()})()));
