@@ -1,6 +1,6 @@
-const BUILD='0340';
-const C='levabota-v038-ui340';
+const BUILD='0341';
+const C='levabota-v038-ui341';
 const CORE=['./manifest-v038.webmanifest','./icon.svg','./icon-192.png','./icon-512.png','./icon-maskable-512.png','./levabota-brand.png','./splash-levabota.png'];
-self.addEventListener('install',e=>{self.skipWaiting();e.waitUntil(caches.open(C).then(c=>Promise.all(CORE.map(async x=>{try{const u=new URL(x,self.location.href);u.searchParams.set('_v',BUILD);const r=await fetch(u,{cache:'reload'});if(r.ok)await c.put(x,r)}catch(_){}}))))});
+self.addEventListener('install',e=>{self.skipWaiting();e.waitUntil(caches.open(C).then(c=>Promise.all(CORE.map(async x=>{try{const r=await fetch(x+'?v='+BUILD,{cache:'reload'});if(r.ok)await c.put(x,r)}catch(_){}}))))});
 self.addEventListener('activate',e=>e.waitUntil((async()=>{const ks=await caches.keys();await Promise.all(ks.filter(k=>k.startsWith('levabota-')&&k!==C).map(k=>caches.delete(k)));await self.clients.claim()})()));
-self.addEventListener('fetch',e=>{if(e.request.method!=='GET')return;const u=new URL(e.request.url);if(e.request.mode==='navigate'){e.respondWith((async()=>{try{const fresh=new URL('./index.html',self.location.href);fresh.searchParams.set('_v',BUILD+'-'+Date.now());const r=await fetch(fresh,{cache:'no-store',credentials:'same-origin'});if(r.ok){const c=await caches.open(C);await c.put('./index.html',r.clone())}return r}catch(_){return (await caches.match('./index.html'))||Response.error()}})());return}if(u.origin===self.location.origin){e.respondWith(fetch(e.request,{cache:'no-store'}).catch(()=>caches.match(e.request)));return}e.respondWith(fetch(e.request).catch(()=>caches.match(e.request))) });
+self.addEventListener('fetch',e=>{if(e.request.method!=='GET')return;const u=new URL(e.request.url);if(e.request.mode==='navigate'){e.respondWith(fetch(e.request,{cache:'no-store'}).then(async r=>{if(r.ok){const c=await caches.open(C);await c.put('./index.html',r.clone())}return r}).catch(()=>caches.match('./index.html')));return}if(u.origin===self.location.origin)e.respondWith(fetch(e.request,{cache:'no-store'}).catch(()=>caches.match(e.request)));});
