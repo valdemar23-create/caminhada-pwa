@@ -128,7 +128,7 @@ body.phase-memory .panelEmpty{background:#6795B1;border-color:#3E6F8D}
 body.phase-memory .memoryPhoto.star:after{background:#d7e9f3e8;color:#285D7D}
 
 
-/* v0.3.74 — acabamento Durante/Memória: sem cartões creme */
+/* v0.3.75 — acabamento Durante/Memória: sem cartões creme */
 body.phase-during{background:#D67B45}
 body.phase-during .phasebar{background:#E8A776}
 body.phase-during .phaseIntro,body.phase-during .card{background:#EBAA79}
@@ -149,7 +149,7 @@ body.phase-memory .memoryStat,body.phase-memory .memoryFeeling,body.phase-memory
 body.phase-memory .memoryNote{background:#82ACC4}
 
 
-/* v0.3.74 — limpeza final visual Durante + Memória */
+/* v0.3.75 — limpeza final visual Durante + Memória */
 body.phase-during .sourcebtn{
   background:#E6A06E;
   border-color:#B95D2C;
@@ -171,7 +171,7 @@ body.phase-memory .notice{background:#7FAAC3;color:#173F59;border:1px solid #467
 body.phase-memory .notice.warn{background:#8BB4CA;color:#274C61;border-color:#56849D}
 
 
-/* v0.3.74 — organização funcional das quatro fases */
+/* v0.3.75 — organização funcional das quatro fases */
 #routeChooser{display:none!important}
 body.phase-memory #routeChooser{display:flex!important}
 body.phase-memory #routeCard .maptools{display:flex!important}
@@ -180,9 +180,20 @@ body.phase-memory #memoryCard{order:1}
 body.phase-memory #panelCard{order:3}
 
 
-/* v0.3.74 — auditoria funcional das fases */
+/* v0.3.75 — auditoria funcional das fases */
 .memoryCoverImg{width:100%;border-radius:16px;display:block;margin:0 0 14px;aspect-ratio:4/5;object-fit:cover}.walkCoverThumb{width:100%;aspect-ratio:4/5;object-fit:cover;border-radius:12px;margin-bottom:9px}.walkmain .walkCoverThumb{max-width:88px;aspect-ratio:4/5;float:left;margin:0 12px 0 0}.final-theme #finalPhaseBar{margin-top:10px}.finalPhaseIntro{margin-bottom:12px}body.phase-memory #memoryCompare{margin:12px 0}body.phase-during #docsCard>p.summary{display:none}.phaseAction{margin:12px 0}.phaseBottomAction{margin-top:14px}.brandRecall{font-size:11px;font-weight:900;letter-spacing:.19em;text-align:center;margin:-5px 0 8px;color:#6b3b27}.final-theme .brandRecall{color:#f1d5c1}
-</style></head><body><div class='version-fixed' id='versionFixed'>LevaBota <b>v0.3.74</b></div><div id="updateBanner" class="hidden" style="position:fixed;left:12px;right:12px;top:12px;z-index:99999;background:#fff7ef;border:1px solid #b3542c;border-radius:16px;padding:12px 14px;box-shadow:0 8px 30px #0002;font-weight:700;color:#5b3b2e">Nova versão disponível <button onclick="applyUpdate()" style="float:right;border:0;border-radius:12px;padding:8px 12px;background:#b3542c;color:white;font-weight:800">Atualizar</button></div><div id='splash' class='splash' aria-label='LevaBota'><img class='splashimg' src='splash-levabota.png' alt='LevaBota — Prepara, Caminha, Vive'><button id='splashStart' type='button' class='splashstart' onclick='enterLevaBota()'>Começar</button></div><script id='levabotaBoot'>
+
+/* v0.3.75 — memória/cartão e realizadas */
+body.phase-memory #memoryCard{order:1}
+body.phase-memory #memoryCover{margin:-4px 0 14px}
+body.phase-memory #memoryCover:empty{display:none}
+body.phase-memory #memoryShareBottom{order:99}
+.walkCard.hasMemoryCover{padding:0;overflow:hidden;min-height:230px;background:transparent;border:0}
+.walkCard.hasMemoryCover .walkCoverThumb{max-width:none;width:100%;height:auto;aspect-ratio:4/5;object-fit:cover;border-radius:18px;margin:0;float:none}
+.walkrow.completedCoverOnly{border-bottom:0;padding:8px 2px}
+.walkrow.completedCoverOnly .walkmain{max-width:180px}
+.walkrow.completedCoverOnly .walkCoverThumb{max-width:none;width:100%;aspect-ratio:4/5;float:none;margin:0;border-radius:16px}
+</style></head><body><div class='version-fixed' id='versionFixed'>LevaBota <b>v0.3.75</b></div><div id="updateBanner" class="hidden" style="position:fixed;left:12px;right:12px;top:12px;z-index:99999;background:#fff7ef;border:1px solid #b3542c;border-radius:16px;padding:12px 14px;box-shadow:0 8px 30px #0002;font-weight:700;color:#5b3b2e">Nova versão disponível <button onclick="applyUpdate()" style="float:right;border:0;border-radius:12px;padding:8px 12px;background:#b3542c;color:white;font-weight:800">Atualizar</button></div><div id='splash' class='splash' aria-label='LevaBota'><img class='splashimg' src='splash-levabota.png' alt='LevaBota — Prepara, Caminha, Vive'><button id='splashStart' type='button' class='splashstart' onclick='enterLevaBota()'>Começar</button></div><script id='levabotaBoot'>
 (function(){
   const BOOT_VERSION='0.3.74';
   function parts(v){return String(v||'0').split('.').map(n=>parseInt(n,10)||0)}
@@ -235,12 +246,12 @@ function escapeHtml(s){return s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','
 function saveWalk(){const w={id:Date.now(),place:$('place').value.trim(),date:$('date').value,time:$('time').value,distance:+$('distance').value,people:+$('people').value,routeType:$('routeType').value||'unknown',source,routeurl:$('routeurl').value.trim()};if(!w.place||!w.date||!w.distance){alert('Preenche local, data e distância.');return}if(w.distance>80&&!confirm('Este percurso parece ser de longa duração. A LevaBota está otimizada para caminhadas de 1 a 2 dias. Se vais preparar apenas uma etapa, indica de preferência a distância dessa etapa. Queres guardar assim mesmo?'))return;if(pendingGPX){w.gpx=pendingGPX;w.walkName=(pendingGPX.routeName||pendingGPX.name||w.place||'').trim()}const a=getWalks();a.unshift(w);setWalks(a);openWalk(w.id)}
 function fmtDate(s){return new Intl.DateTimeFormat('pt-PT',{weekday:'short',day:'numeric',month:'short'}).format(new Date(s+'T12:00:00'))}
 function walkDisplayName(w){if(w?.walkName&&String(w.walkName).trim())return String(w.walkName).trim();const r=w?.gpx?.routeName;if(r&&String(r).trim())return String(r).trim();return w?.place||'Caminhada'}
-function renderWalks(){const a=getWalks();$('count').textContent=a.length?`${a.length} guardada${a.length>1?'s':''}`:'';$('walks').className=a.length?'':'empty';$('allWalksBtn')?.classList.toggle('hidden',!a.length);if(!a.length){$('walks').innerHTML='Ainda não tens caminhadas guardadas.';return}const base=manageMode?a:a.slice(0,4);const rows=base.map(w=>`<div class="walkrow">${manageMode?`<input class="walkcheck" type="checkbox" ${selectedWalks.has(w.id)?'checked':''} onchange="toggleWalkSelection(${w.id},this.checked)">`:''}<div class="walkmain" data-walk-cover="${w.id}" ${manageMode?'onclick="toggleWalkByRow('+w.id+')"':'onclick="openWalk('+w.id+')"'}><b>${escapeHtml(walkDisplayName(w))}</b><div class="summary">${fmtDate(w.date)} · ${(+w.distance).toFixed(1)} km · ${w.people} pessoa${w.people>1?'s':''}${w.gpx?' · GPX ✓':''}${w.completed?' · Concluída ✓':''}</div></div></div>`).join('');const tools=manageMode?`<div class="homeManage"><p class="managehint">Seleciona uma caminhada para editar ou uma ou mais para eliminar.</p><div class="selectionbar"><button class="btn secondary small" onclick="editSelectedWalk()">${iconInline('edit')}Editar</button><button class="btn danger small" onclick="deleteSelectedWalks()">${iconInline('trash')}Eliminar</button></div></div>`:'';$('walks').innerHTML=rows+tools;hydrateWalkCovers()}
+function renderWalks(){const a=getWalks();$('count').textContent=a.length?`${a.length} guardada${a.length>1?'s':''}`:'';$('walks').className=a.length?'':'empty';$('allWalksBtn')?.classList.toggle('hidden',!a.length);if(!a.length){$('walks').innerHTML='Ainda não tens caminhadas guardadas.';return}const base=manageMode?a:a.slice(0,4);const rows=base.map(w=>{const coverOnly=w.completed&&w.memoryCover?.key;return `<div class="walkrow${coverOnly?' completedCoverOnly':''}">${manageMode?`<input class="walkcheck" type="checkbox" ${selectedWalks.has(w.id)?'checked':''} onchange="toggleWalkSelection(${w.id},this.checked)">`:''}<div class="walkmain" data-walk-cover="${w.id}" ${manageMode?'onclick="toggleWalkByRow('+w.id+')"':'onclick="openWalk('+w.id+')"'}>${coverOnly?'':`<b>${escapeHtml(walkDisplayName(w))}</b><div class="summary">${fmtDate(w.date)} · ${(+w.distance).toFixed(1)} km · ${w.people} pessoa${w.people>1?'s':''}${w.gpx?' · GPX ✓':''}${w.completed?' · Concluída ✓':''}</div>`}</div></div>`}).join('');const tools=manageMode?`<div class="homeManage"><p class="managehint">Seleciona uma caminhada para editar ou uma ou mais para eliminar.</p><div class="selectionbar"><button class="btn secondary small" onclick="editSelectedWalk()">${iconInline('edit')}Editar</button><button class="btn danger small" onclick="deleteSelectedWalks()">${iconInline('trash')}Eliminar</button></div></div>`:'';$('walks').innerHTML=rows+tools;hydrateWalkCovers()}
 
 let walkFilter='all';function showAllWalks(){view('allWalks');renderAllWalks();window.scrollTo(0,0)}
 function setWalkFilter(f,btn){walkFilter=f;document.querySelectorAll('.walkFilters button').forEach(b=>b.classList.toggle('on',b===btn));renderAllWalks()}
 async function hydrateWalkCovers(){for(const w of getWalks()){if(!w.completed||!w.memoryCover?.key)continue;try{const blob=await docGet(w.memoryCover.key);if(!blob)continue;const u=URL.createObjectURL(blob);document.querySelectorAll(`[data-walk-cover="${w.id}"]`).forEach(el=>{if(!el.querySelector('.walkCoverThumb'))el.insertAdjacentHTML('afterbegin',`<img class='walkCoverThumb' src='${u}' alt='Capa da caminhada'>`)})}catch(e){}}}
-function renderAllWalks(){const q=($('walkSearch')?.value||'').trim().toLowerCase();let a=getWalks().slice();if(walkFilter==='completed')a=a.filter(w=>w.completed);if(walkFilter==='planned')a=a.filter(w=>!w.completed);if(q)a=a.filter(w=>(walkDisplayName(w)+' '+(w.place||'')).toLowerCase().includes(q));const box=$('allWalkCards');if(!box)return;if(!a.length){box.innerHTML=`<div class='empty' style='grid-column:1/-1'>Nenhuma caminhada encontrada.</div>`;return}box.innerHTML=a.map(w=>`<button class='walkCard' data-walk-cover='${w.id}' onclick='openWalk(${w.id})'><span class='walkCardBoot'>🥾</span><b>${escapeHtml(walkDisplayName(w))}</b><span class='wcPlace'>${escapeHtml(w.place||'')}</span><span class='wcMeta'>${fmtDate(w.date)} · ${(+w.distance).toFixed(1)} km</span><span class='wcState'>${w.completed?'✓ Concluída':'🎒 Planeada'}</span></button>`).join('');hydrateWalkCovers()}
+function renderAllWalks(){const q=($('walkSearch')?.value||'').trim().toLowerCase();let a=getWalks().slice();if(walkFilter==='completed')a=a.filter(w=>w.completed);if(walkFilter==='planned')a=a.filter(w=>!w.completed);if(q)a=a.filter(w=>(walkDisplayName(w)+' '+(w.place||'')).toLowerCase().includes(q));const box=$('allWalkCards');if(!box)return;if(!a.length){box.innerHTML=`<div class='empty' style='grid-column:1/-1'>Nenhuma caminhada encontrada.</div>`;return}box.innerHTML=a.map(w=>w.completed&&w.memoryCover?.key?`<button class='walkCard hasMemoryCover' data-walk-cover='${w.id}' onclick='openWalk(${w.id})' aria-label='Abrir ${escapeHtml(walkDisplayName(w))}'></button>`:`<button class='walkCard' data-walk-cover='${w.id}' onclick='openWalk(${w.id})'><span class='walkCardBoot'>🥾</span><b>${escapeHtml(walkDisplayName(w))}</b><span class='wcPlace'>${escapeHtml(w.place||'')}</span><span class='wcMeta'>${fmtDate(w.date)} · ${(+w.distance).toFixed(1)} km</span><span class='wcState'>${w.completed?'✓ Concluída':'🎒 Planeada'}</span></button>`).join('');hydrateWalkCovers()}
 function toggleManageMode(){if(!manageMode){manageMode=true;selectedWalks.clear();view('home');$('navHome').classList.remove('active');$('navManage').innerHTML=iconNav('check')+'<small>Concluir</small>';$('navManage').classList.add('active');renderWalks();setTimeout(()=>document.querySelector('.managehint')?.scrollIntoView({behavior:'smooth',block:'nearest'}),50);return}manageMode=false;selectedWalks.clear();$('navManage').innerHTML=iconNav('manage')+'<small>Gerir</small>';$('navManage').classList.remove('active');$('navHome').classList.add('active');renderWalks()}
 function toggleWalkSelection(id,on){on?selectedWalks.add(id):selectedWalks.delete(id);renderWalks()}
 function toggleWalkByRow(id){selectedWalks.has(id)?selectedWalks.delete(id):selectedWalks.add(id);renderWalks()}
@@ -293,7 +304,7 @@ function showWalkPhase(phase){
    }else if(phase==='during'){
      moveBefore($('routeCard'),$('panelCard')); moveBefore($('panelCard'),$('docsCard')); if($('docsCard'))$('docsCard').after($('duringAction'));
    }else if(phase==='memory'){
-     moveBefore($('routeCard'),$('panelCard')); if($('memoryShareBottom')&&$('panelCard'))$('panelCard').after($('memoryShareBottom'));
+     moveBefore($('memoryCard'),$('routeCard')); moveBefore($('routeCard'),$('panelCard')); if($('memoryShareBottom'))detail.appendChild($('memoryShareBottom'));
    }
  }
  if(phase==='during'){$('duringAction')?.classList.remove('phaseHidden','hidden');renderDuringRecords();}renderRouteDocument(current);renderPanelPhoto();if(phase==='memory')renderMemoryGallery();if(phase==='during' || phase==='plan')setTimeout(()=>renderRoute(current),80);if(phase==='memory'&&current.actualGpx)setTimeout(()=>renderRoute({...current,gpx:current.actualGpx}),80);
@@ -422,7 +433,7 @@ function recalcElevationRobust(g){
  g.up=up;g.down=down;g.elevationMethod='point-threshold-1m-v2';return g;
 }
 let sharePhotoItems=[],sharePhotoIndex=0;
-async function collectSharePhotos(){const out=[],g=current?.actualGpx;for(const p of (g?.waypoints||[])){for(const ph of poiPhotos(p)){try{const blob=await docGet(ph.key);if(blob)out.push({blob,label:poiLabel(p),star:poiState(p)==='highlight'})}catch(e){}}}for(const ph of (current?.memoryPhotos||[])){try{const blob=await docGet(ph.key);if(blob)out.push({blob,label:ph.name||'Memória',star:false})}catch(e){}}out.sort((a,b)=>(b.star?1:0)-(a.star?1:0));return out}
+async function collectSharePhotos(){const out=[],seen=new Set(),g=current?.actualGpx;const add=async(ph,label,star)=>{try{const blob=await docGet(ph.key);if(!blob)return;let sig='';try{if(crypto?.subtle){const h=await crypto.subtle.digest('SHA-256',await blob.arrayBuffer());sig=Array.from(new Uint8Array(h)).map(x=>x.toString(16).padStart(2,'0')).join('')}}catch(e){}sig=sig||`${ph.name||''}|${blob.size}`;if(seen.has(sig))return;seen.add(sig);out.push({blob,label,star})}catch(e){}};for(const p of (g?.waypoints||[]))for(const ph of poiPhotos(p))await add(ph,poiLabel(p),poiState(p)==='highlight');for(const ph of (current?.memoryPhotos||[]))await add(ph,ph.name||'Memória',false);out.sort((a,b)=>(b.star?1:0)-(a.star?1:0));return out}
 function loadImageFromBlob(blob){return new Promise((res,rej)=>{const u=URL.createObjectURL(blob),im=new Image();im.onload=()=>{URL.revokeObjectURL(u);res(im)};im.onerror=e=>{URL.revokeObjectURL(u);rej(e)};im.src=u})}
 function loadShareBrand(){return new Promise(res=>{const im=new Image();im.onload=()=>res(im);im.onerror=()=>res(null);im.src='levabota-logo-transparent.png'})}
 function wrapCanvasText(ctx,text,x,y,maxWidth,lineHeight,maxLines=2){const words=String(text||'').split(/\s+/);let line='',lines=[];for(const word of words){const test=line?line+' '+word:word;if(ctx.measureText(test).width>maxWidth&&line){lines.push(line);line=word}else line=test}if(line)lines.push(line);lines=lines.slice(0,maxLines);lines.forEach((l,i)=>ctx.fillText(l,x,y+i*lineHeight));return y+lines.length*lineHeight}
