@@ -2,7 +2,7 @@
   "id": "/caminhada-pwa/levabota-app-v2",
   "name": "LevaBota",
   "short_name": "LevaBota",
-  "description": "Prepara a tua caminhada: percurso, meteorologia e o essencial para levar.",
+  "description": "A tua caminhada. Do plano à memória.",
   "start_url": "/caminhada-pwa/?app=levabota-v2",
   "scope": "/caminhada-pwa/",
   "display": "standalone",
@@ -10,8 +10,8 @@
     "standalone"
   ],
   "orientation": "portrait-primary",
-  "background_color": "#F7F1E7",
-  "theme_color": "#B5522B",
+  "background_color": "#311F14",
+  "theme_color": "#311F14",
   "prefer_related_applications": false,
   "icons": [
     {
