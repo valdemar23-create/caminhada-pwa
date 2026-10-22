@@ -1,0 +1,7 @@
+const BUILD='0.3.91';
+const C='levabota-shell-0391';
+const CORE=['./manifest-v047.webmanifest','./icon.svg','./icon-192.png','./icon-512.png','./icon-maskable-512.png','./levabota-brand.png','./splash-levabota.png'];
+const freshURL=(url,tag)=>{const u=new URL(url,self.location.href);u.searchParams.set('__lb',tag+'-'+Date.now());return u.href};
+self.addEventListener('install',e=>{self.skipWaiting();e.waitUntil((async()=>{const c=await caches.open(C);for(const x of CORE){try{const r=await fetch(freshURL(x,BUILD),{cache:'no-store'});if(r.ok)await c.put(x,r.clone())}catch(_){}}try{const r=await fetch(freshURL('./',BUILD),{cache:'no-store'});if(r.ok)await c.put('./index.html',r.clone())}catch(_){}})())});
+self.addEventListener('activate',e=>e.waitUntil((async()=>{const ks=await caches.keys();await Promise.all(ks.filter(k=>k.startsWith('levabota-')&&k!==C).map(k=>caches.delete(k)));await self.clients.claim()})()));
+self.addEventListener('fetch',e=>{if(e.request.method!=='GET')return;const u=new URL(e.request.url);if(e.request.mode==='navigate'){e.respondWith((async()=>{try{const r=await fetch(freshURL(e.request.url,'nav-'+BUILD),{cache:'no-store',redirect:'follow'});if(r.ok){const c=await caches.open(C);await c.put('./index.html',r.clone())}return r}catch(_){return (await caches.match('./index.html'))||Response.error()}})());return}if(u.origin===self.location.origin)e.respondWith(fetch(e.request,{cache:'no-store'}).catch(()=>caches.match(e.request)))});
