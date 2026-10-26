@@ -1,4 +1,4 @@
-const BUILD='0.3.96';
+const BUILD='0.3.97';
 const C='levabota-shell-0391';
 const CORE=['./manifest-v051.webmanifest','./icon.svg','./icon-192.png','./icon-512.png','./icon-maskable-512.png','./levabota-brand.png','./splash-levabota.png','./mascote-01-satisfeita.png'];
 const freshURL=(url,tag)=>{const u=new URL(url,self.location.href);u.searchParams.set('__lb',tag+'-'+Date.now());return u.href};
