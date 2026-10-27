@@ -357,14 +357,22 @@ function storedPoint(o){
  if(rec)return [Number(rec.pos.lat),Number(rec.pos.lon)];
  return null
 }
-async function firstPointFromWantGPX(w){
- if(!w?.gpx?.key)return null;
- try{const blob=await docGet(w.gpx.key);if(!blob)return null;const txt=await blob.text(),xml=new DOMParser().parseFromString(txt,'application/xml');let n=xml.getElementsByTagNameNS('*','trkpt')[0]||xml.getElementsByTagNameNS('*','rtept')[0]||xml.getElementsByTagNameNS('*','wpt')[0];if(!n)return null;const lat=Number(n.getAttribute('lat')),lon=Number(n.getAttribute('lon'));return Number.isFinite(lat)&&Number.isFinite(lon)?[lat,lon]:null}catch(e){return null}
+async function routeFromWantGPX(w){
+ if(!w?.gpx?.key)return [];
+ try{const blob=await docGet(w.gpx.key);if(!blob)return [];const txt=await blob.text(),xml=new DOMParser().parseFromString(txt,'application/xml');let ns=[...xml.getElementsByTagNameNS('*','trkpt')];if(!ns.length)ns=[...xml.getElementsByTagNameNS('*','rtept')];return ns.map(n=>[Number(n.getAttribute('lat')),Number(n.getAttribute('lon'))]).filter(p=>Number.isFinite(p[0])&&Number.isFinite(p[1]))}catch(e){return []}
+}
+function routeFromWalk(w){
+ const g=w?.actualGpx?.pts?.length?w.actualGpx:w?.gpx;
+ return (g?.pts||[]).map(p=>[Number(p.lat),Number(p.lon)]).filter(p=>Number.isFinite(p[0])&&Number.isFinite(p[1]))
 }
 async function mapItems(){
  const out=[];
- for(const w of getWants()){let pt=storedPoint(w);if(!pt&&w.type!=='discovery')pt=await firstPointFromWantGPX(w);if(pt)out.push({id:w.id,pt,name:w.name||w.place||'Sem nome',kind:w.type==='discovery'?'discovery':'want',place:w.place||'',detail:w.type==='discovery'?(w.kind||'Lugar'):'Quero fazer'})}
- for(const w of getWalks().filter(x=>x.completed)){const pt=storedPoint(w);if(pt)out.push({id:w.id,pt,name:walkDisplayName(w),kind:'done',place:w.place||'',detail:'Caminhada realizada'})}
+ for(const w of getWants()){
+  let route=[],pt=storedPoint(w);
+  if(w.type!=='discovery'&&w?.gpx?.key){route=await routeFromWantGPX(w);if(!pt&&route.length)pt=route[0]}
+  if(pt)out.push({id:w.id,pt,route,name:w.name||w.place||'Sem nome',kind:w.type==='discovery'?'discovery':'want',place:w.place||'',detail:w.type==='discovery'?(w.kind||'Lugar'):'Quero fazer'})
+ }
+ for(const w of getWalks().filter(x=>x.completed)){const route=routeFromWalk(w),pt=storedPoint(w)||(route.length?route[0]:null);if(pt)out.push({id:w.id,pt,route,name:walkDisplayName(w),kind:'done',place:w.place||'',detail:'Caminhada realizada'})}
  return out
 }
 function showMyMap(){view('myMapView');setTimeout(renderMyMap,80);window.scrollTo(0,0)}
@@ -374,10 +382,14 @@ async function renderMyMap(){
  if(myMapInstance){myMapInstance.remove();myMapInstance=null}
  myMapInstance=L.map(box).setView([39.5,-8.0],6);
  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'© OpenStreetMap'}).addTo(myMapInstance);
- const all=await mapItems(),items=all.filter(x=>mapFilters[x.kind]),bounds=[];
- for(const x of items){const icon=x.kind==='discovery'?'📍':x.kind==='want'?'🥾':'✅';const label=x.kind==='done'?'Ver caminhada':x.kind==='discovery'?'Ver descoberta':'Ver Quero fazer';const m=L.marker(x.pt).addTo(myMapInstance);m.bindPopup(`<b>${icon} ${escapeHtml(x.name)}</b>${x.place?`<br>${escapeHtml(x.place)}`:''}<br><small>${escapeHtml(x.detail)}</small><br><button class="btn small" style="margin-top:8px" onclick="openMapItem('${x.kind}',${JSON.stringify(x.id)})">${label}</button>`);bounds.push(x.pt)}
+ const all=await mapItems(),items=all.filter(x=>mapFilters[x.kind]),bounds=[];let routeCount=0;
+ for(const x of items){
+  const icon=x.kind==='discovery'?'📍':x.kind==='want'?'🥾':'✅',label=x.kind==='done'?'Ver caminhada':x.kind==='discovery'?'Ver descoberta':'Ver Quero fazer';
+  if(x.route?.length>1){const line=L.polyline(x.route,{weight:x.kind==='done'?4:3,opacity:x.kind==='done'?.82:.68,dashArray:x.kind==='want'?'8 7':null}).addTo(myMapInstance);line.bindPopup(`<b>${icon} ${escapeHtml(x.name)}</b><br><button class="btn small" style="margin-top:8px" onclick="openMapItem('${x.kind}',${JSON.stringify(x.id)})">${label}</button>`);x.route.forEach(p=>bounds.push(p));routeCount++}
+  const m=L.marker(x.pt).addTo(myMapInstance);m.bindPopup(`<b>${icon} ${escapeHtml(x.name)}</b>${x.place?`<br>${escapeHtml(x.place)}`:''}<br><small>${escapeHtml(x.detail)}</small><br><button class="btn small" style="margin-top:8px" onclick="openMapItem('${x.kind}',${JSON.stringify(x.id)})">${label}</button>`);bounds.push(x.pt)
+ }
  if(bounds.length)myMapInstance.fitBounds(bounds,{padding:[28,28],maxZoom:13});
- if(info){const total=getWants().length+getWalks().filter(x=>x.completed).length,missing=total-all.length;info.innerHTML=`A mostrar <b>${items.length}</b> ponto${items.length!==1?'s':''} com os filtros selecionados.${missing>0?`<br><br>${missing} registo${missing!==1?'s':''} ainda não tem posição. Nas Descobertas podes usar <b>Definir no mapa</b>; no Quero fazer, um GPX permite localizar automaticamente.`:''}`}
+ if(info){const total=getWants().length+getWalks().filter(x=>x.completed).length,missing=total-all.length;info.innerHTML=`A mostrar <b>${items.length}</b> registo${items.length!==1?'s':''}${routeCount?` e <b>${routeCount}</b> percurso${routeCount!==1?'s':''} GPX`:''} com os filtros selecionados.${missing>0?`<br><br>${missing} registo${missing!==1?'s':''} ainda não tem posição.`:''}`}
  setTimeout(()=>myMapInstance?.invalidateSize(),120)
 }
 function renderWalks(){const a=getWalks();const done=a.filter(w=>w.completed);const km=done.reduce((sum,w)=>sum+(Number(w.distance)||0),0);$('count').textContent=done.length?`${done.length} realizada${done.length>1?'s':''}`:'';$('allWalksBtn')?.classList.toggle('hidden',!a.length);if(!a.length){$('walks').textContent='Ainda não tens caminhadas realizadas.';return}if(done.length){$('walks').innerHTML=`<b>${done.length}</b> caminhada${done.length>1?'s':''} realizada${done.length>1?'s':''} · <b>${km.toFixed(1)} km</b> percorridos`;}else{$('walks').textContent='Ainda não tens caminhadas concluídas.';}}
