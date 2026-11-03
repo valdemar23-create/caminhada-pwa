@@ -1,4 +1,4 @@
-const BUILD='0.3.119';
+const BUILD='0.3.120';
 const C='levabota-shell-0405';
 const CORE=['./manifest-v051.webmanifest','./icon.svg','./icon-192.png','./icon-512.png','./icon-maskable-512.png','./levabota-brand.png','./splash-levabota.png','./mascote-01.png','./mascote-02.png','./mascote-03.png','./mascote-04.png','./mascote-05.png','./mascote-06.png','./mascote-07.png','./mascote-08.png','./mascote-09.png','./mascote-10.png','./mascote-11.png','./mascote-12.png','./mascote-13.png','./mascote-14.png','./mascote-15.png','./mascote-16.png','./mascote-17.png','./mascote-18.png','./mascote-19.png','./mascote-20.png','./mascote-21.png','./mascote-22.png','./mascote-23.png','./mascote-24.png','./mascote-25.png','./mascote-26.png','./mascote-27.png','./mascote-28.png'];
 const freshURL=(url,tag)=>{const u=new URL(url,self.location.href);u.searchParams.set('__lb',tag+'-'+Date.now());return u.href};
